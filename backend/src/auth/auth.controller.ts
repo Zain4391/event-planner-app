@@ -1,10 +1,12 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto, UserRole } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { CurrentUser } from './decorators/getCurrentUser';
 import { JwtAuthGuard } from './guards/jwt-auth-guard';
 import type { userReturn } from './types/user.type';
+import { RoleGuard } from './guards/role-guard';
+import { Roles } from './decorators/role';
 
 @Controller('auth')
 export class AuthController {
@@ -69,5 +71,36 @@ export class AuthController {
             message: "Profile retrieved sucessfully",
             user
         };
+    }
+
+    // test endpoints for RBAC
+    @Get("admin-test")
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN)
+    async adminTest(@CurrentUser() user: userReturn) {
+        return {
+            message: "Access Granted to Admin",
+            role: user.role
+        }
+    }
+
+    @Get("Organizer-test")
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(UserRole.ADMIN, UserRole.ORGANIZER)
+    async OrganizerTest(@CurrentUser() user: userReturn) {
+        return {
+            message: "Access Granted to Admin & Organizer",
+            role: user.role
+        }
+    }
+
+    @Get("Customer-test")
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Roles(UserRole.CUSTOMER)
+    async Customer(@CurrentUser() user: userReturn) {
+        return {
+            message: "Access Granted to Customer",
+            role: user.role
+        }
     }
 }
