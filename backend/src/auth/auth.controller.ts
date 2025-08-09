@@ -1,7 +1,10 @@
-import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { CurrentUser } from './decorators/getCurrentUser';
+import { JwtAuthGuard } from './guards/jwt-auth-guard';
+import type { userReturn } from './types/user.type';
 
 @Controller('auth')
 export class AuthController {
@@ -56,5 +59,15 @@ export class AuthController {
             statusCode: response.statusCode,
             message: response.message
         }
+    }
+
+    @Get("profile")
+    @UseGuards(JwtAuthGuard)
+    async getUserProfile(@CurrentUser() user: userReturn) {
+        return {
+            statusCode: HttpStatus.OK,
+            message: "Profile retrieved sucessfully",
+            user
+        };
     }
 }
