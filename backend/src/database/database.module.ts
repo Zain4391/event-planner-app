@@ -5,6 +5,8 @@ import postgres from 'postgres';
 import * as schema from "./schemas/schema";
 
 export const DATABASE_CONNECTION = 'DATABASE_CONNECTION';
+// database type to be used
+export type DatabaseType = ReturnType<typeof drizzle<typeof schema>>;
 
 @Global() // available everywhere, no imports needed
 @Module({
