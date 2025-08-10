@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
+import { UuidValidationPipe } from './pipes/uuid-validation-pipe';
 
-@Module({})
+@Global()
+@Module({
+    providers: [UuidValidationPipe],
+    exports: [UuidValidationPipe]
+})
 export class CommonModule {}
