@@ -10,5 +10,5 @@ export type categoryReturn = {
 export type categoryApiResponse = {
     statusCode: HttpStatus;
     message: string;
-    data: categoryReturn;
+    data: categoryReturn | categoryReturn[] | string;
 }

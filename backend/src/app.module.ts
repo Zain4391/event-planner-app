@@ -7,7 +7,6 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { CommonModule } from './common/common.module';
 import { CategoriesModule } from './categories/categories.module';
-import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
