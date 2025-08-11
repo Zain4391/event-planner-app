@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { CommonModule } from './common/common.module';
 import { CategoriesModule } from './categories/categories.module';
+import { UserModule } from './user/user.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { CategoriesModule } from './categories/categories.module';
     }),
     AuthModule, 
     DatabaseModule, 
-    CommonModule, CategoriesModule
+    CommonModule, CategoriesModule, UserModule
   ],
   controllers: [AppController],
   providers: [AppService],
