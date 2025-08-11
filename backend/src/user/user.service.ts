@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as schema from "../database/schemas/schema";
 import type { DatabaseType } from "../database/database.module";
@@ -50,6 +50,9 @@ export class UserService {
 
       return user;
     } catch (error) {
+      if (error.code === '23505') { // PostgreSQL unique violation
+        throw new ConflictException('Email already exists');
+      }
       throw error;
     }
   }
