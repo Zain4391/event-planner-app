@@ -8,6 +8,9 @@ import { DatabaseModule } from './database/database.module';
 import { CommonModule } from './common/common.module';
 import { CategoriesModule } from './categories/categories.module';
 import { UserModule } from './user/user.module';
+import { SupabaseService } from './supabase/supabase.service';
+import { SupabaseModule } from './supabase/supabase.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -17,7 +20,7 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule, 
     DatabaseModule, 
-    CommonModule, CategoriesModule, UserModule
+    CommonModule, CategoriesModule, UserModule, SupabaseModule, EventModule
   ],
   controllers: [AppController],
   providers: [AppService],

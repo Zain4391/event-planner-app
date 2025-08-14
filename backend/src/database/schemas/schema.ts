@@ -117,6 +117,11 @@ export const events = pgTable("events", {
 			foreignColumns: [categories.id],
 			name: "events_category_id_fkey"
 		}),
+	foreignKey({
+			columns: [table.organizerId],
+			foreignColumns: [users.id],
+			name: "events_organizer_id_fkey"
+		}),
 	check("check_available_capacity", sql`available_capacity >= 0`),
 	check("events_status_check", sql`(status)::text = ANY (ARRAY[('Draft'::character varying)::text, ('Published'::character varying)::text, ('Cancelled'::character varying)::text, ('Completed'::character varying)::text])`),
 ]);

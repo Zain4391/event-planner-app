@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { orders, orderItems, ticketTiers, payments, events, categories, tickets } from "./schema";
+import { orders, orderItems, ticketTiers, payments, events, categories, users, tickets } from "./schema";
 
 export const orderItemsRelations = relations(orderItems, ({one}) => ({
 	order: one(orders, {
@@ -40,9 +40,17 @@ export const eventsRelations = relations(events, ({one, many}) => ({
 		fields: [events.categoryId],
 		references: [categories.id]
 	}),
+	user: one(users, {
+		fields: [events.organizerId],
+		references: [users.id]
+	}),
 }));
 
 export const categoriesRelations = relations(categories, ({many}) => ({
+	events: many(events),
+}));
+
+export const usersRelations = relations(users, ({many}) => ({
 	events: many(events),
 }));
 
