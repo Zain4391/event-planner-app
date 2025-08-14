@@ -2,7 +2,9 @@ import { Injectable, Inject, NotFoundException, ConflictException } from '@nestj
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as schema from "../database/schemas/schema";
 import type { DatabaseType } from "../database/database.module";
-import { eq } from 'drizzle-orm';
+import { eq, ilike, or } from 'drizzle-orm';
+import { PaginationDto } from './dto/pagination-user-dto';
+import { count } from 'drizzle-orm';
 
 @Injectable()
 export class UserService {
@@ -11,14 +13,51 @@ export class UserService {
     @Inject("DATABASE_CONNECTION") private readonly db: DatabaseType
   ) {}
   
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
     try {
-      const users = await this.db.select().from(schema.users);
+      const users = await this.db.select({
+        id: schema.users.id,
+        email: schema.users.email,
+        firstName: schema.users.firstName,
+        lastName: schema.users.lastName,
+        createdAt: schema.users.createdAt,
+        isActive: schema.users.isActive
+      }).from(schema.users)
+      .where(
+        paginationDto.search 
+          ? or(
+              ilike(schema.users.firstName, `%${paginationDto.search}%`),
+              ilike(schema.users.lastName, `%${paginationDto.search}%`),
+              ilike(schema.users.email, `%${paginationDto.search}%`)
+            )
+          : undefined  // No filter if no search term
+      )
+      .limit(paginationDto.limit)
+      .offset(paginationDto.offset);
 
-      if(users.length === 0) {
-        return [];
-      }
-      return users;
+      const [totalCountQuery] = await this.db.select({ count: count() })
+      .from(schema.users)
+      .where(
+          paginationDto.search 
+            ? or(
+                ilike(schema.users.firstName, `%${paginationDto.search}%`),
+                ilike(schema.users.lastName, `%${paginationDto.search}%`),
+                ilike(schema.users.email, `%${paginationDto.search}%`)
+              )
+            : undefined
+      );
+      
+      return {
+        users,
+        meta: {
+          page: paginationDto.page,
+          limit: paginationDto.limit,
+          total: totalCountQuery.count,
+          totalPages: Math.ceil(totalCountQuery.count / paginationDto.limit),
+          hasNextPage: paginationDto.page < Math.ceil(totalCountQuery.count / paginationDto.limit),
+          hasPreviousPage: paginationDto.page > 1
+        }
+      };
     } catch (error) {
       throw error;
     }
@@ -26,7 +65,14 @@ export class UserService {
 
   async findOne(id: string) {
     try {
-      const [user] = await this.db.select().from(schema.users).where(eq(schema.users.id, id));
+      const [user] = await this.db.select({
+        id: schema.users.id,
+        email: schema.users.email,
+        firstName: schema.users.firstName,
+        lastName: schema.users.lastName,
+        createdAt: schema.users.createdAt,
+        isActive: schema.users.isActive
+      }).from(schema.users).where(eq(schema.users.id, id));
       if(!user) {
         throw new NotFoundException("User not found");
       }
@@ -41,7 +87,8 @@ export class UserService {
       const [user] = await this.db.update(schema.users).set(updateUserDto).where(eq(schema.users.id, id)).returning({
         firstname: schema.users.firstName,
         lastName: schema.users.lastName,
-        email: schema.users.email
+        email: schema.users.email,
+        isActive: schema.users.isActive
       });
 
       if(!user) {
@@ -80,7 +127,7 @@ export class UserService {
 
       await this.db.update(schema.users).set({
         isActive: false
-      });
+      }).where(eq(schema.users.id, id));
 
       return `User # ${id} deactivated`;
     } catch (error) {

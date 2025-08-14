@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, HttpStatus, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UuidValidationPipe } from 'src/common/pipes/uuid-validation-pipe';
@@ -6,20 +6,23 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 import { RoleGuard } from 'src/auth/guards/role-guard';
 import { Roles } from 'src/auth/decorators/role';
 import { UserRole } from 'src/auth/dto/register.dto';
+import { PaginationDto } from './dto/pagination-user-dto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  async findAll() {
-    const users = await this.userService.findAll();
+  async findAll(@Query() paginationDto: PaginationDto) {
+    const result = await this.userService.findAll(paginationDto);
+    const pagination = result.meta;
     return {
       statusCode: HttpStatus.OK,
       message: "Users retrieved successfully",
-      data: users
+      data: result.users,
+      pagination
     };
   }
 
