@@ -42,7 +42,7 @@ export class UpdateEventDto {
     @IsOptional()
     @IsString()
     @Matches(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/, {
-        message: 'startTime must be in HH:MM:SS format'
+        message: 'endTime must be in HH:MM:SS format'
     })
     endTime?: string;    // "18:00:00"
 
@@ -51,7 +51,6 @@ export class UpdateEventDto {
     @Min(1)
     totalCapacity?: number;
 
-    @IsOptional()
     @IsOptional()
     @IsUrl()
     bannerImageUrl?: string;
