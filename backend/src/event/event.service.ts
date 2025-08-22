@@ -15,11 +15,19 @@ export class EventService {
         private readonly configService: ConfigService
     ) {}
 
-    async findAll(userRole?: string) {
+    async findAll(userRole?: string, organizerId?: string) {
         try {
             const events = await this.db.select().from(schema.events);
             if(events.length === 0) {
                 return [];
+            }
+            if (userRole === "Admin") {
+                return events;
+            }
+
+            if(userRole === "Organizer" && organizerId) {
+                const organizerEvents = events.filter((event) => event.organizerId === organizerId);
+                return organizerEvents;
             }
 
             const publishedEvents = events.filter((event) => event.status === "Published");
@@ -116,22 +124,24 @@ export class EventService {
                 }
             }
 
-            let updateData = { ...updateEventDto };
+            let newAvailableCapacity = 0;
             if (updateEventDto.totalCapacity) {
                 // Get current event to calculate new availableCapacity
                 const [currentEvent] = await this.db.select().from(schema.events)
                     .where(eq(schema.events.id, id));
                 
                 const ticketsSold = currentEvent.totalCapacity - currentEvent.availableCapacity;
-                const newAvailableCapacity = updateEventDto.totalCapacity - ticketsSold;
+                newAvailableCapacity = updateEventDto.totalCapacity - ticketsSold;
                 
                 if (newAvailableCapacity < 0) {
                     throw new BadRequestException('Cannot reduce capacity below tickets already sold');
                 }
-                
-                updateData.totalCapacity = newAvailableCapacity;
+
             }
-            const [event] = await this.db.update(schema.events).set(updateEventDto).where(
+            const [event] = await this.db.update(schema.events).set({
+                ...updateEventDto,
+                ...(updateEventDto.totalCapacity && { availableCapacity: newAvailableCapacity})
+            }).where(
                 and(
                     eq(schema.events.id, id),
                     eq(schema.events.organizerId, organizerId)
