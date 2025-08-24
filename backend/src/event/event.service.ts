@@ -26,11 +26,13 @@ export class EventService {
             }
 
             if(userRole === "Organizer" && organizerId) {
-                const organizerEvents = events.filter((event) => event.organizerId === organizerId);
+                const organizerEvents = await this.db.select().from(schema.events)
+                .where(eq(schema.events.organizerId, organizerId));
                 return organizerEvents;
             }
 
-            const publishedEvents = events.filter((event) => event.status === "Published");
+            const publishedEvents = await this.db.select().from(schema.events)
+            .where(eq(schema.events.status, "Published"));
             return publishedEvents;
         } catch (error) {
             throw error;
@@ -190,9 +192,9 @@ export class EventService {
     /* FOR Cancellation (Planned) 
     
     1. Cancel the event by setting status as cancelled.
-    2. Broadcasts an event called EVENT.CANCEL. 
+    2. Broadcasts an event called EVENT.CANCELLED. 
     3. The event is caught by required modules (payment for refunds, order for cancellation etc.) and
-       they perform said operations
+       they perform required operations
 
     ============== OR =========================
     1. Use transaction to perform event cancellation

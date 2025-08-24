@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Roles } from 'src/auth/decorators/role';
 import { UserRole } from 'src/auth/dto/register.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
@@ -7,15 +7,8 @@ import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event-dto';
 import { UpdateEventDto } from './dto/update-event-dto';
 import { UuidValidationPipe } from 'src/common/pipes/uuid-validation-pipe';
-
-
-/*
-TODO:
-1. Add event service implementation
-2. Return status codes
-3. Use the CurrentUser decorator to fetch user from request.
-
-*/
+import { CurrentUser } from 'src/auth/decorators/getCurrentUser';
+import type { jwtPayload } from 'src/auth/types/jwt-payload.type';
 
 @Controller('events')
 export class EventController {
@@ -25,36 +18,87 @@ export class EventController {
     ) {}
 
     @Get()
-    @UseGuards(JwtAuthGuard)
-    async findAll() {}
+    async findAll() {
+        const data = await this.eventService.findAll();
+        return {
+            data,
+            message: "Published events fetched successfully",
+            statusCode: HttpStatus.OK
+        }
+    }
 
     @Get('admin/all')
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ADMIN)
-    async findAllAdmin() {}
+    async findAllAdmin(
+        @CurrentUser() user: jwtPayload
+    ) {
+        const data = await this.eventService.findAll("Admin");
+        return {
+            data,
+            message: "Events fetched successfully",
+            statusCode: HttpStatus.OK
+        }
+    }
 
     @Get("my-events")
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
-    async findAllOrganizer() {}
+    async findAllOrganizer(
+        @CurrentUser() user: jwtPayload
+    ) {
+        const data = await this.eventService.findAll("Organizer", user.sub);
+        return {
+            data,
+            message: "Organizer's events fetched successfully",
+            statusCode: HttpStatus.OK
+        }
+    }
 
     @Post("create-event")
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
-    async create(@Body() createEventDto: CreateEventDto) {}
+    async create(@Body() createEventDto: CreateEventDto, @CurrentUser() user: jwtPayload) {
+        const data = await this.eventService.create(createEventDto, user.sub);
+        return {
+            data,
+            message: "Event created successfully",
+            statusCode: HttpStatus.CREATED
+        }
+    }
 
     @Patch(":id/update-event")
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
-    async update(@Param("id", UuidValidationPipe) id: string, @Body() updateEventDto: UpdateEventDto) {}
+    async update(@Param("id", UuidValidationPipe) id: string, @Body() updateEventDto: UpdateEventDto, @CurrentUser() user: jwtPayload) {
+        const data = await this.eventService.update(id, updateEventDto, user.sub);
+        return {
+            data,
+            message: "Event updated successfully",
+            statusCode: HttpStatus.OK
+        }
+    }
 
     @Patch(":id/publish-event")
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
-    async confrim(@Param("id", UuidValidationPipe) id: string, @Body() status: string) {}
+    async confrim(@Param("id", UuidValidationPipe) id: string, @CurrentUser() user: jwtPayload) {
+        const data = await this.eventService.confirmAndPublish(id, user.sub);
+        return {
+            data,
+            message: "Event has been published",
+            statusCode: HttpStatus.OK
+        }
+    }
 
     @Delete(":id/remove-event")
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ADMIN, UserRole.ORGANIZER)
-    async remove(@Param("id", UuidValidationPipe) id: string) {}
+    async remove(@Param("id", UuidValidationPipe) id: string) {
+        const response = await this.eventService.remove(id);
+        return {
+            message: response,
+            statusCode: HttpStatus.NO_CONTENT
+        }
+    }
 }
