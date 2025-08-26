@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
     async validate(payload: jwtPayload): Promise<userReturn> {
         try {
-            const id = payload.sub;
+            const id = payload.id;
 
             const userDB = await this.db.select({
                 id: schema.users.id,
@@ -48,6 +48,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
             return user;
         } catch (error) {
+            console.log(error);
             throw new UnauthorizedException("User Authentication Failed");
         }
     }

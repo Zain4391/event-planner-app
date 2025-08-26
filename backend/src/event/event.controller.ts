@@ -46,11 +46,22 @@ export class EventController {
     @Roles(UserRole.ORGANIZER)
     async findAllOrganizer(
         @CurrentUser() user: jwtPayload
-    ) {
-        const data = await this.eventService.findAll("Organizer", user.sub);
+    ) { 
+        const data = await this.eventService.findAll("Organizer", user.id);
         return {
             data,
             message: "Organizer's events fetched successfully",
+            statusCode: HttpStatus.OK
+        }
+    }
+
+    @Get(":id")
+    @UseGuards(JwtAuthGuard)
+    async findOne(@Param("id", UuidValidationPipe) id: string) {
+        const data = await this.eventService.findOne(id);
+        return {
+            data,
+            message: "Event fetched successfully",
             statusCode: HttpStatus.OK
         }
     }
@@ -59,7 +70,7 @@ export class EventController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
     async create(@Body() createEventDto: CreateEventDto, @CurrentUser() user: jwtPayload) {
-        const data = await this.eventService.create(createEventDto, user.sub);
+        const data = await this.eventService.create(createEventDto, user.id);
         return {
             data,
             message: "Event created successfully",
@@ -71,7 +82,7 @@ export class EventController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
     async update(@Param("id", UuidValidationPipe) id: string, @Body() updateEventDto: UpdateEventDto, @CurrentUser() user: jwtPayload) {
-        const data = await this.eventService.update(id, updateEventDto, user.sub);
+        const data = await this.eventService.update(id, updateEventDto, user.id);
         return {
             data,
             message: "Event updated successfully",
@@ -83,7 +94,7 @@ export class EventController {
     @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles(UserRole.ORGANIZER)
     async confrim(@Param("id", UuidValidationPipe) id: string, @CurrentUser() user: jwtPayload) {
-        const data = await this.eventService.confirmAndPublish(id, user.sub);
+        const data = await this.eventService.confirmAndPublish(id, user.id);
         return {
             data,
             message: "Event has been published",

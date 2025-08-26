@@ -26,7 +26,7 @@ export class AuthService {
     }
 
     private async signAndgenerateToken(id: string, email: string, isActive: boolean, role: string) {
-        const payload = {sub: id, email, isActive, role};
+        const payload = {id: id, email, isActive, role};
         const jwtSecret = this.configService.get<string>('JWT_SECRET');
         const jwtExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN') || '7d';
 
