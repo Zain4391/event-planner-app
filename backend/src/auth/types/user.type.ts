@@ -12,6 +12,8 @@ export type userReturn = {
 export type loginReturn = {
     id: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: string;
     token: string;
 }

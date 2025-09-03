@@ -99,6 +99,8 @@ export class AuthService {
                 return {
                     id: userDB.id,
                     email: userDB.email,
+                    firstName: userDB.firstName,
+                    lastName: userDB.lastName,
                     role: userDB.role,
                     token: token
                 };
