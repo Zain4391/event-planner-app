@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { LoginCredentials, RegisterData, User, Event, Category } from '../types/api';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -48,16 +49,16 @@ apiInstance.interceptors.response.use(
 export const apiClient = {
   // Auth endpoints
   auth: {
-    login: (data: any) => apiInstance.post('/auth/login', data),
-    register: (data: any) => apiInstance.post('/auth/register', data),
-    resetPassword: (data: any) => apiInstance.post('/auth/reset-password', data),
+    login: (data: LoginCredentials) => apiInstance.post('/auth/login', data),
+    register: (data: RegisterData) => apiInstance.post('/auth/register', data),
+    resetPassword: (data: { email: string; password: string }) => apiInstance.post('/auth/reset-password', data),
   },
 
   // User endpoints
   users: {
     getAll: () => apiInstance.get('/users'),
     getProfile: () => apiInstance.get('/users/profile'),
-    updateProfile: (data: any) => apiInstance.put('/users/profile', data),
+    updateProfile: (data: Partial<User>) => apiInstance.put('/users/profile', data),
     deleteUser: (id: string) => apiInstance.delete(`/users/${id}`),
   },
 
@@ -65,17 +66,20 @@ export const apiClient = {
   events: {
     getAll: () => apiInstance.get('/events'),
     getById: (id: string) => apiInstance.get(`/events/${id}`),
-    create: (data: any) => apiInstance.post('/events', data),
-    update: (id: string, data: any) => apiInstance.put(`/events/${id}`, data),
-    delete: (id: string) => apiInstance.delete(`/events/${id}`),
+    getAdminAll: () => apiInstance.get('/events/admin/all'),
+    getMyEvents: () => apiInstance.get('/events/my-events'),
+    create: (data: Omit<Event, 'id' | 'createdAt' | 'updatedAt' | 'organizerId'>) => apiInstance.post('/events/create-event', data),
+    update: (id: string, data: Partial<Event>) => apiInstance.patch(`/events/${id}/update-event`, data),
+    publish: (id: string) => apiInstance.patch(`/events/${id}/publish-event`),
+    delete: (id: string) => apiInstance.delete(`/events/${id}/remove-event`),
   },
 
   // Category endpoints
   categories: {
     getAll: () => apiInstance.get('/categories'),
     getById: (id: string) => apiInstance.get(`/categories/${id}`),
-    create: (data: any) => apiInstance.post('/categories', data),
-    update: (id: string, data: any) => apiInstance.put(`/categories/${id}`, data),
+    create: (data: Omit<Category, 'id' | 'createdAt'>) => apiInstance.post('/categories', data),
+    update: (id: string, data: Partial<Category>) => apiInstance.put(`/categories/${id}`, data),
     delete: (id: string) => apiInstance.delete(`/categories/${id}`),
   },
 

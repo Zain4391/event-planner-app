@@ -40,15 +40,34 @@ export interface User {
     organizerId: string;
     venueName: string;
     venueAddress: string;
-    eventDate: string;
-    startTime: string;
-    endTime: string;
+    eventDate: string; // "2024-12-25"
+    startTime: string; // "14:30:00"
+    endTime: string;   // "18:00:00"
     totalCapacity: number;
     availableCapacity: number;
     status: 'Draft' | 'Published' | 'Cancelled' | 'Completed';
     bannerImageUrl?: string;
     createdAt: string;
     updatedAt: string;
+  }
+
+  // API Response types
+  export interface ApiResponse<T> {
+    statusCode: number;
+    message: string;
+    data?: T;
+  }
+
+  export interface EventListResponse {
+    data: Event[];
+    message: string;
+    statusCode: number;
+  }
+
+  export interface CategoryListResponse {
+    data: Category[];
+    message: string;
+    statusCode: number;
   }
   
   // Form states
