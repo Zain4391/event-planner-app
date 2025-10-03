@@ -103,7 +103,11 @@ describe('UserService', () => {
     });
 
     it('should return paginated users without search', async () => {
-      const paginationWithoutSearch = { ...mockPaginationDto, search: undefined, offset: 0 };
+      const paginationWithoutSearch = {
+        ...mockPaginationDto,
+        search: undefined,
+        offset: 0,
+      };
       mockDb.select.mockResolvedValueOnce(mockUsers);
       mockDb.select.mockResolvedValueOnce([mockCountResult]);
 
@@ -161,7 +165,7 @@ describe('UserService', () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.findOne(userId)).rejects.toThrow(
-        new NotFoundException('User not found')
+        new NotFoundException('User not found'),
       );
     });
 
@@ -202,7 +206,7 @@ describe('UserService', () => {
       mockDb.update.mockResolvedValueOnce([]);
 
       await expect(service.update(userId, updateUserDto)).rejects.toThrow(
-        new NotFoundException('User not found')
+        new NotFoundException('User not found'),
       );
     });
 
@@ -212,7 +216,7 @@ describe('UserService', () => {
       mockDb.update.mockRejectedValueOnce(error);
 
       await expect(service.update(userId, updateUserDto)).rejects.toThrow(
-        new ConflictException('Email already exists')
+        new ConflictException('Email already exists'),
       );
     });
 
@@ -220,7 +224,9 @@ describe('UserService', () => {
       const error = new Error('Database error');
       mockDb.update.mockRejectedValueOnce(error);
 
-      await expect(service.update(userId, updateUserDto)).rejects.toThrow(error);
+      await expect(service.update(userId, updateUserDto)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -234,7 +240,9 @@ describe('UserService', () => {
 
       const result = await service.remove(userId);
 
-      expect(result).toBe(`User with id ${userId} has been removed PERMANENTLY`);
+      expect(result).toBe(
+        `User with id ${userId} has been removed PERMANENTLY`,
+      );
       expect(mockDb.select).toHaveBeenCalled();
       expect(mockDb.from).toHaveBeenCalledWith(mockSchema.users);
       expect(mockDb.delete).toHaveBeenCalledWith(mockSchema.users);
@@ -244,7 +252,7 @@ describe('UserService', () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.remove(userId)).rejects.toThrow(
-        new NotFoundException('User not found')
+        new NotFoundException('User not found'),
       );
     });
 
@@ -277,7 +285,7 @@ describe('UserService', () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.deactivate(userId)).rejects.toThrow(
-        new NotFoundException('User not found')
+        new NotFoundException('User not found'),
       );
     });
 

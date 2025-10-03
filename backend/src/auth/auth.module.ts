@@ -21,10 +21,10 @@ import { JwtStrategy } from './strategies/jwt.strategy';
           expiresIn: configService.get<string>('JWT_EXPIRES_IN') || '7d',
         },
       }),
-    })
+    }),
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule {}

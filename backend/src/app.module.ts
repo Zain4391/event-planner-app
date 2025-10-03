@@ -15,12 +15,16 @@ import { EventModule } from './event/event.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,        // Makes config available everywhere
-      envFilePath: '.env',   // Path to your .env file
+      isGlobal: true, // Makes config available everywhere
+      envFilePath: '.env', // Path to your .env file
     }),
-    AuthModule, 
-    DatabaseModule, 
-    CommonModule, CategoriesModule, UserModule, SupabaseModule, EventModule
+    AuthModule,
+    DatabaseModule,
+    CommonModule,
+    CategoriesModule,
+    UserModule,
+    SupabaseModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

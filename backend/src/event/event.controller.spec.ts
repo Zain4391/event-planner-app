@@ -143,14 +143,19 @@ describe('EventController', () => {
         message: "Organizer's events fetched successfully",
         statusCode: HttpStatus.OK,
       });
-      expect(eventService.findAll).toHaveBeenCalledWith('Organizer', mockUser.id);
+      expect(eventService.findAll).toHaveBeenCalledWith(
+        'Organizer',
+        mockUser.id,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Database error');
       mockEventService.findAll.mockRejectedValueOnce(error);
 
-      await expect(controller.findAllOrganizer(mockUser)).rejects.toThrow(error);
+      await expect(controller.findAllOrganizer(mockUser)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -222,14 +227,19 @@ describe('EventController', () => {
         message: 'Event created successfully',
         statusCode: HttpStatus.CREATED,
       });
-      expect(eventService.create).toHaveBeenCalledWith(mockCreateEventDto, mockUser.id);
+      expect(eventService.create).toHaveBeenCalledWith(
+        mockCreateEventDto,
+        mockUser.id,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Category not found');
       mockEventService.create.mockRejectedValueOnce(error);
 
-      await expect(controller.create(mockCreateEventDto, mockUser)).rejects.toThrow(error);
+      await expect(
+        controller.create(mockCreateEventDto, mockUser),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -262,14 +272,20 @@ describe('EventController', () => {
         message: 'Event updated successfully',
         statusCode: HttpStatus.OK,
       });
-      expect(eventService.update).toHaveBeenCalledWith(eventId, updateEventDto, mockUser.id);
+      expect(eventService.update).toHaveBeenCalledWith(
+        eventId,
+        updateEventDto,
+        mockUser.id,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Event not found');
       mockEventService.update.mockRejectedValueOnce(error);
 
-      await expect(controller.update(eventId, updateEventDto, mockUser)).rejects.toThrow(error);
+      await expect(
+        controller.update(eventId, updateEventDto, mockUser),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -288,7 +304,9 @@ describe('EventController', () => {
     };
 
     it('should publish an event successfully', async () => {
-      mockEventService.confirmAndPublish.mockResolvedValueOnce(mockPublishedEvent);
+      mockEventService.confirmAndPublish.mockResolvedValueOnce(
+        mockPublishedEvent,
+      );
 
       const result = await controller.confrim(eventId, mockUser);
 
@@ -297,14 +315,19 @@ describe('EventController', () => {
         message: 'Event has been published',
         statusCode: HttpStatus.OK,
       });
-      expect(eventService.confirmAndPublish).toHaveBeenCalledWith(eventId, mockUser.id);
+      expect(eventService.confirmAndPublish).toHaveBeenCalledWith(
+        eventId,
+        mockUser.id,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Event not found');
       mockEventService.confirmAndPublish.mockRejectedValueOnce(error);
 
-      await expect(controller.confrim(eventId, mockUser)).rejects.toThrow(error);
+      await expect(controller.confrim(eventId, mockUser)).rejects.toThrow(
+        error,
+      );
     });
   });
 

@@ -129,14 +129,18 @@ describe('CategoriesController', () => {
         message: 'Category created successfully',
         data: mockCategory,
       });
-      expect(categoriesService.create).toHaveBeenCalledWith(mockCreateCategoryDto);
+      expect(categoriesService.create).toHaveBeenCalledWith(
+        mockCreateCategoryDto,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Category already exists');
       mockCategoriesService.create.mockRejectedValueOnce(error);
 
-      await expect(controller.create(mockCreateCategoryDto)).rejects.toThrow(error);
+      await expect(controller.create(mockCreateCategoryDto)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -164,14 +168,19 @@ describe('CategoriesController', () => {
         message: 'Category updated successfully',
         data: mockUpdatedCategory,
       });
-      expect(categoriesService.update).toHaveBeenCalledWith(categoryId, updateCategoryDto);
+      expect(categoriesService.update).toHaveBeenCalledWith(
+        categoryId,
+        updateCategoryDto,
+      );
     });
 
     it('should handle service errors', async () => {
       const error = new Error('Category not found');
       mockCategoriesService.update.mockRejectedValueOnce(error);
 
-      await expect(controller.update(categoryId, updateCategoryDto)).rejects.toThrow(error);
+      await expect(
+        controller.update(categoryId, updateCategoryDto),
+      ).rejects.toThrow(error);
     });
   });
 

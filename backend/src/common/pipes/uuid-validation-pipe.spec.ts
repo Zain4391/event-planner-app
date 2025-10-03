@@ -49,41 +49,61 @@ describe('UuidValidationPipe', () => {
 
     it('should throw BadRequestException for invalid UUIDs', () => {
       invalidUuids.forEach((invalidUuid) => {
-        expect(() => pipe.transform(invalidUuid, {} as any)).toThrow(BadRequestException);
+        expect(() => pipe.transform(invalidUuid, {} as any)).toThrow(
+          BadRequestException,
+        );
       });
     });
 
     it('should throw BadRequestException with correct message for invalid UUIDs', () => {
       invalidUuids.forEach((invalidUuid) => {
-        expect(() => pipe.transform(invalidUuid, {} as any)).toThrow('Invalid UUID format');
+        expect(() => pipe.transform(invalidUuid, {} as any)).toThrow(
+          'Invalid UUID format',
+        );
       });
     });
 
     it('should throw BadRequestException when value is null', () => {
-      expect(() => pipe.transform(null as any, {} as any)).toThrow(BadRequestException);
-      expect(() => pipe.transform(null as any, {} as any)).toThrow('ID parameter is required');
+      expect(() => pipe.transform(null as any, {} as any)).toThrow(
+        BadRequestException,
+      );
+      expect(() => pipe.transform(null as any, {} as any)).toThrow(
+        'ID parameter is required',
+      );
     });
 
     it('should throw BadRequestException when value is undefined', () => {
-      expect(() => pipe.transform(undefined as any, {} as any)).toThrow(BadRequestException);
-      expect(() => pipe.transform(undefined as any, {} as any)).toThrow('ID parameter is required');
+      expect(() => pipe.transform(undefined as any, {} as any)).toThrow(
+        BadRequestException,
+      );
+      expect(() => pipe.transform(undefined as any, {} as any)).toThrow(
+        'ID parameter is required',
+      );
     });
 
     it('should throw BadRequestException when value is empty string', () => {
       expect(() => pipe.transform('', {} as any)).toThrow(BadRequestException);
-      expect(() => pipe.transform('', {} as any)).toThrow('ID parameter is required');
+      expect(() => pipe.transform('', {} as any)).toThrow(
+        'ID parameter is required',
+      );
     });
 
     it('should throw BadRequestException when value is whitespace only', () => {
-      expect(() => pipe.transform('   ', {} as any)).toThrow(BadRequestException);
-      expect(() => pipe.transform('   ', {} as any)).toThrow('Invalid UUID format');
+      expect(() => pipe.transform('   ', {} as any)).toThrow(
+        BadRequestException,
+      );
+      expect(() => pipe.transform('   ', {} as any)).toThrow(
+        'Invalid UUID format',
+      );
     });
 
     it('should handle non-string values', () => {
       const nonStringValues = [123, {}, [], true, false, Symbol('test')];
 
       nonStringValues.forEach((value) => {
-        expect(() => pipe.transform(value as any, {} as any)).toThrow(BadRequestException);
+        expect(() => pipe.transform(value as any, {} as any)).toThrow(
+          BadRequestException,
+        );
       });
     });
 
@@ -118,8 +138,12 @@ describe('UuidValidationPipe', () => {
       const upperCaseUuid = '123E4567-E89B-12D3-A456-426614174000';
       const mixedCaseUuid = '123e4567-E89b-12d3-A456-426614174000';
 
-      expect(() => pipe.transform(upperCaseUuid, {} as any)).toThrow(BadRequestException);
-      expect(() => pipe.transform(mixedCaseUuid, {} as any)).toThrow(BadRequestException);
+      expect(() => pipe.transform(upperCaseUuid, {} as any)).toThrow(
+        BadRequestException,
+      );
+      expect(() => pipe.transform(mixedCaseUuid, {} as any)).toThrow(
+        BadRequestException,
+      );
     });
   });
 });

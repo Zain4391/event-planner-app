@@ -1,4 +1,14 @@
-import { Controller, Get, Body, Patch, Param, Delete, HttpStatus, UseGuards, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UuidValidationPipe } from 'src/common/pipes/uuid-validation-pipe';
@@ -20,9 +30,9 @@ export class UserController {
     const pagination = result.meta;
     return {
       statusCode: HttpStatus.OK,
-      message: "Users retrieved successfully",
+      message: 'Users retrieved successfully',
       data: result.users,
-      pagination
+      pagination,
     };
   }
 
@@ -32,19 +42,22 @@ export class UserController {
     const user = await this.userService.findOne(id);
     return {
       statusCode: HttpStatus.OK,
-      message: "User fetched successfully",
-      data: user
+      message: 'User fetched successfully',
+      data: user,
     };
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  async update(@Param('id', UuidValidationPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id', UuidValidationPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     const user = await this.userService.update(id, updateUserDto);
     return {
       statusCode: HttpStatus.OK,
-      message: "User updated",
-      data: user
+      message: 'User updated',
+      data: user,
     };
   }
 
@@ -55,7 +68,7 @@ export class UserController {
     const msg = await this.userService.remove(id);
     return {
       statusCode: HttpStatus.NO_CONTENT,
-      message: msg
+      message: msg,
     };
   }
 
@@ -65,7 +78,7 @@ export class UserController {
     const msg = await this.userService.deactivate(id);
     return {
       statusCode: HttpStatus.NO_CONTENT,
-      message: msg
+      message: msg,
     };
   }
 }

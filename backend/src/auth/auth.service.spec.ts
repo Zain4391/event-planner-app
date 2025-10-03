@@ -184,7 +184,10 @@ describe('AuthService', () => {
         role: mockUser.role,
         token: 'mock-jwt-token',
       });
-      expect(mockedBcrypt.compare).toHaveBeenCalledWith('password123', 'hashed-password');
+      expect(mockedBcrypt.compare).toHaveBeenCalledWith(
+        'password123',
+        'hashed-password',
+      );
       expect(jwtService.sign).toHaveBeenCalledWith(
         {
           id: mockUser.id,
@@ -195,7 +198,7 @@ describe('AuthService', () => {
         {
           secret: 'test-secret',
           expiresIn: '7d',
-        }
+        },
       );
     });
 
@@ -241,7 +244,9 @@ describe('AuthService', () => {
     it('should successfully reset password', async () => {
       mockDb.select.mockResolvedValueOnce([{ id: 'user-id' }]);
       mockDb.update.mockResolvedValueOnce([{ id: 'user-id' }]);
-      (mockedBcrypt.hash as jest.Mock).mockResolvedValueOnce('new-hashed-password');
+      (mockedBcrypt.hash as jest.Mock).mockResolvedValueOnce(
+        'new-hashed-password',
+      );
 
       const result = await service.resetPassword(email, newPassword);
 

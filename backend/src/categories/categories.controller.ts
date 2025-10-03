@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  UseGuards,
+} from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -18,54 +28,63 @@ export class CategoriesController {
     const categories = await this.categoriesService.findAll();
     return {
       statusCode: HttpStatus.OK,
-      message: "Categories retrieved successfully",
-      data: categories
+      message: 'Categories retrieved successfully',
+      data: categories,
     };
   }
 
   @Get(':id')
-  async findOne(@Param('id', UuidValidationPipe) id: string): Promise<categoryApiResponse> {
+  async findOne(
+    @Param('id', UuidValidationPipe) id: string,
+  ): Promise<categoryApiResponse> {
     const category = await this.categoriesService.findOne(id);
     return {
       statusCode: HttpStatus.OK,
-      message: "Category fetched successfully",
-      data: category
+      message: 'Category fetched successfully',
+      data: category,
     };
   }
 
   @Post()
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  async create(@Body() createCategoryDto: CreateCategoryDto): Promise<categoryApiResponse> {
+  async create(
+    @Body() createCategoryDto: CreateCategoryDto,
+  ): Promise<categoryApiResponse> {
     const category = await this.categoriesService.create(createCategoryDto);
     return {
       statusCode: HttpStatus.CREATED,
-      message: "Category created successfully",
-      data: category
+      message: 'Category created successfully',
+      data: category,
     };
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  async update(@Param('id', UuidValidationPipe) id: string, @Body() updateCategoryDto: UpdateCategoryDto): Promise<categoryApiResponse> {
+  async update(
+    @Param('id', UuidValidationPipe) id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ): Promise<categoryApiResponse> {
     const category = await this.categoriesService.update(id, updateCategoryDto);
     return {
       statusCode: HttpStatus.OK,
-      message: "Category updated successfully",
-      data: category
+      message: 'Category updated successfully',
+      data: category,
     };
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(UserRole.ADMIN)
-  async remove(@Param('id', UuidValidationPipe) id: string): Promise<categoryApiResponse> {
+  async remove(
+    @Param('id', UuidValidationPipe) id: string,
+  ): Promise<categoryApiResponse> {
     const response = await this.categoriesService.remove(id);
     return {
       statusCode: HttpStatus.OK,
-      message: "Category deleted succesfully",
-      data: response
-    }
+      message: 'Category deleted succesfully',
+      data: response,
+    };
   }
 }

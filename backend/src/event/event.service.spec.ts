@@ -105,7 +105,10 @@ describe('EventService', () => {
       const result = await service.findAll('Organizer', organizerId);
 
       expect(result).toEqual(organizerEvents);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.events).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.events)
+        .where(expect.any(Function));
     });
 
     it('should return published events for other roles', async () => {
@@ -115,7 +118,10 @@ describe('EventService', () => {
       const result = await service.findAll();
 
       expect(result).toEqual(publishedEvents);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.events).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.events)
+        .where(expect.any(Function));
     });
 
     it('should return empty array when no events', async () => {
@@ -148,14 +154,17 @@ describe('EventService', () => {
       const result = await service.findOne(eventId);
 
       expect(result).toEqual(mockEvent);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.events).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.events)
+        .where(expect.any(Function));
     });
 
     it('should throw NotFoundException when event not found', async () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.findOne(eventId)).rejects.toThrow(
-        new NotFoundException('Event not found')
+        new NotFoundException('Event not found'),
       );
     });
 
@@ -164,7 +173,7 @@ describe('EventService', () => {
       mockDb.select.mockResolvedValueOnce([draftEvent]);
 
       await expect(service.findOne(eventId)).rejects.toThrow(
-        new NotFoundException('Event not found or published.')
+        new NotFoundException('Event not found or published.'),
       );
     });
 
@@ -211,16 +220,19 @@ describe('EventService', () => {
       const result = await service.create(mockCreateEventDto, organizerId);
 
       expect(result).toEqual(mockEvent);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.categories).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.categories)
+        .where(expect.any(Function));
       expect(mockDb.insert).toHaveBeenCalledWith(mockSchema.events);
     });
 
     it('should throw NotFoundException when category not found', async () => {
       mockDb.select.mockResolvedValueOnce([]);
 
-      await expect(service.create(mockCreateEventDto, organizerId)).rejects.toThrow(
-        new NotFoundException('Category not found')
-      );
+      await expect(
+        service.create(mockCreateEventDto, organizerId),
+      ).rejects.toThrow(new NotFoundException('Category not found'));
     });
 
     it('should throw BadRequestException when event date is in the past', async () => {
@@ -231,7 +243,7 @@ describe('EventService', () => {
       mockDb.select.mockResolvedValueOnce([mockCategory]);
 
       await expect(service.create(pastEventDto, organizerId)).rejects.toThrow(
-        new BadRequestException('Event date must be in the future')
+        new BadRequestException('Event date must be in the future'),
       );
     });
 
@@ -243,8 +255,10 @@ describe('EventService', () => {
       };
       mockDb.select.mockResolvedValueOnce([mockCategory]);
 
-      await expect(service.create(invalidTimeEventDto, organizerId)).rejects.toThrow(
-        new BadRequestException('Start time must be before end time')
+      await expect(
+        service.create(invalidTimeEventDto, organizerId),
+      ).rejects.toThrow(
+        new BadRequestException('Start time must be before end time'),
       );
     });
 
@@ -252,7 +266,9 @@ describe('EventService', () => {
       const error = new Error('Database error');
       mockDb.select.mockRejectedValueOnce(error);
 
-      await expect(service.create(mockCreateEventDto, organizerId)).rejects.toThrow(error);
+      await expect(
+        service.create(mockCreateEventDto, organizerId),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -290,7 +306,10 @@ describe('EventService', () => {
     });
 
     it('should validate category when categoryId is provided', async () => {
-      const updateWithCategory = { ...updateEventDto, categoryId: 'new-category-id' };
+      const updateWithCategory = {
+        ...updateEventDto,
+        categoryId: 'new-category-id',
+      };
       const mockCategory = { id: 'new-category-id', name: 'New Category' };
 
       mockDb.select.mockResolvedValueOnce([mockCategory]);
@@ -299,16 +318,22 @@ describe('EventService', () => {
 
       await service.update(eventId, updateWithCategory, organizerId);
 
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.categories).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.categories)
+        .where(expect.any(Function));
     });
 
     it('should throw NotFoundException when category not found', async () => {
-      const updateWithCategory = { ...updateEventDto, categoryId: 'invalid-category' };
+      const updateWithCategory = {
+        ...updateEventDto,
+        categoryId: 'invalid-category',
+      };
       mockDb.select.mockResolvedValueOnce([]);
 
-      await expect(service.update(eventId, updateWithCategory, organizerId)).rejects.toThrow(
-        new NotFoundException('Category not found')
-      );
+      await expect(
+        service.update(eventId, updateWithCategory, organizerId),
+      ).rejects.toThrow(new NotFoundException('Category not found'));
     });
 
     it('should validate future date when date/time is updated', async () => {
@@ -320,8 +345,10 @@ describe('EventService', () => {
 
       mockDb.select.mockResolvedValueOnce([mockCurrentEvent]);
 
-      await expect(service.update(eventId, updateWithDate, organizerId)).rejects.toThrow(
-        new BadRequestException('Event date must be in the future')
+      await expect(
+        service.update(eventId, updateWithDate, organizerId),
+      ).rejects.toThrow(
+        new BadRequestException('Event date must be in the future'),
       );
     });
 
@@ -334,8 +361,10 @@ describe('EventService', () => {
 
       mockDb.select.mockResolvedValueOnce([mockCurrentEvent]);
 
-      await expect(service.update(eventId, updateWithTime, organizerId)).rejects.toThrow(
-        new BadRequestException('Start time must be before end time')
+      await expect(
+        service.update(eventId, updateWithTime, organizerId),
+      ).rejects.toThrow(
+        new BadRequestException('Start time must be before end time'),
       );
     });
 
@@ -356,8 +385,12 @@ describe('EventService', () => {
       const updateWithLowCapacity = { ...updateEventDto, totalCapacity: 50 };
       mockDb.select.mockResolvedValueOnce([mockCurrentEvent]);
 
-      await expect(service.update(eventId, updateWithLowCapacity, organizerId)).rejects.toThrow(
-        new BadRequestException('Cannot reduce capacity below tickets already sold')
+      await expect(
+        service.update(eventId, updateWithLowCapacity, organizerId),
+      ).rejects.toThrow(
+        new BadRequestException(
+          'Cannot reduce capacity below tickets already sold',
+        ),
       );
     });
 
@@ -365,16 +398,18 @@ describe('EventService', () => {
       mockDb.select.mockResolvedValueOnce([mockCurrentEvent]);
       mockDb.update.mockResolvedValueOnce([]);
 
-      await expect(service.update(eventId, updateEventDto, organizerId)).rejects.toThrow(
-        new NotFoundException('Event not found')
-      );
+      await expect(
+        service.update(eventId, updateEventDto, organizerId),
+      ).rejects.toThrow(new NotFoundException('Event not found'));
     });
 
     it('should handle errors', async () => {
       const error = new Error('Database error');
       mockDb.select.mockRejectedValueOnce(error);
 
-      await expect(service.update(eventId, updateEventDto, organizerId)).rejects.toThrow(error);
+      await expect(
+        service.update(eventId, updateEventDto, organizerId),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -399,16 +434,18 @@ describe('EventService', () => {
     it('should throw NotFoundException when event not found', async () => {
       mockDb.update.mockResolvedValueOnce([]);
 
-      await expect(service.confirmAndPublish(eventId, organizerId)).rejects.toThrow(
-        new NotFoundException('Event not found.')
-      );
+      await expect(
+        service.confirmAndPublish(eventId, organizerId),
+      ).rejects.toThrow(new NotFoundException('Event not found.'));
     });
 
     it('should handle errors', async () => {
       const error = new Error('Database error');
       mockDb.update.mockRejectedValueOnce(error);
 
-      await expect(service.confirmAndPublish(eventId, organizerId)).rejects.toThrow(error);
+      await expect(
+        service.confirmAndPublish(eventId, organizerId),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -421,7 +458,9 @@ describe('EventService', () => {
       const result = await service.remove(eventId);
 
       expect(result).toBe('Event removed');
-      expect(mockDb.delete).toHaveBeenCalledWith(mockSchema.events).where(expect.any(Function));
+      expect(mockDb.delete)
+        .toHaveBeenCalledWith(mockSchema.events)
+        .where(expect.any(Function));
     });
 
     it('should handle errors', async () => {

@@ -3,7 +3,7 @@ import { UuidValidationPipe } from './pipes/uuid-validation-pipe';
 
 @Global()
 @Module({
-    providers: [UuidValidationPipe],
-    exports: [UuidValidationPipe]
+  providers: [UuidValidationPipe],
+  exports: [UuidValidationPipe],
 })
 export class CommonModule {}

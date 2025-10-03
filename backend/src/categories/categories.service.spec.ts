@@ -80,7 +80,7 @@ describe('CategoriesService', () => {
       mockDb.insert.mockRejectedValueOnce(error);
 
       await expect(service.create(mockCreateCategoryDto)).rejects.toThrow(
-        new ConflictException('Category already exists')
+        new ConflictException('Category already exists'),
       );
     });
 
@@ -88,7 +88,9 @@ describe('CategoriesService', () => {
       const error = new Error('Database error');
       mockDb.insert.mockRejectedValueOnce(error);
 
-      await expect(service.create(mockCreateCategoryDto)).rejects.toThrow(error);
+      await expect(service.create(mockCreateCategoryDto)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -140,14 +142,17 @@ describe('CategoriesService', () => {
       const result = await service.findOne(categoryId);
 
       expect(result).toEqual(mockCategory);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.categories).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.categories)
+        .where(expect.any(Function));
     });
 
     it('should throw NotFoundException when category not found', async () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.findOne(categoryId)).rejects.toThrow(
-        new NotFoundException('No categories found')
+        new NotFoundException('No categories found'),
       );
     });
 
@@ -188,9 +193,9 @@ describe('CategoriesService', () => {
     it('should throw NotFoundException when category not found', async () => {
       mockDb.update.mockResolvedValueOnce([]);
 
-      await expect(service.update(categoryId, updateCategoryDto)).rejects.toThrow(
-        new NotFoundException('Category not found')
-      );
+      await expect(
+        service.update(categoryId, updateCategoryDto),
+      ).rejects.toThrow(new NotFoundException('Category not found'));
     });
 
     it('should throw ConflictException when category name already exists', async () => {
@@ -198,16 +203,18 @@ describe('CategoriesService', () => {
       error.code = '23505';
       mockDb.update.mockRejectedValueOnce(error);
 
-      await expect(service.update(categoryId, updateCategoryDto)).rejects.toThrow(
-        new ConflictException('Category name already exists')
-      );
+      await expect(
+        service.update(categoryId, updateCategoryDto),
+      ).rejects.toThrow(new ConflictException('Category name already exists'));
     });
 
     it('should handle other errors', async () => {
       const error = new Error('Database error');
       mockDb.update.mockRejectedValueOnce(error);
 
-      await expect(service.update(categoryId, updateCategoryDto)).rejects.toThrow(error);
+      await expect(
+        service.update(categoryId, updateCategoryDto),
+      ).rejects.toThrow(error);
     });
   });
 
@@ -222,15 +229,20 @@ describe('CategoriesService', () => {
       const result = await service.remove(categoryId);
 
       expect(result).toBe(`Category number ${categoryId} removed`);
-      expect(mockDb.select).toHaveBeenCalledWith().from(mockSchema.categories).where(expect.any(Function));
-      expect(mockDb.delete).toHaveBeenCalledWith(mockSchema.categories).where(expect.any(Function));
+      expect(mockDb.select)
+        .toHaveBeenCalledWith()
+        .from(mockSchema.categories)
+        .where(expect.any(Function));
+      expect(mockDb.delete)
+        .toHaveBeenCalledWith(mockSchema.categories)
+        .where(expect.any(Function));
     });
 
     it('should throw NotFoundException when category not found', async () => {
       mockDb.select.mockResolvedValueOnce([]);
 
       await expect(service.remove(categoryId)).rejects.toThrow(
-        new NotFoundException('Category not found')
+        new NotFoundException('Category not found'),
       );
     });
 

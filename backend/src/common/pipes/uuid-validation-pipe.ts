@@ -1,5 +1,10 @@
-import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
-import { validate } from "uuid";
+import {
+  ArgumentMetadata,
+  BadRequestException,
+  Injectable,
+  PipeTransform,
+} from '@nestjs/common';
+import { validate } from 'uuid';
 
 // Pipe is a class which implements the said interface.
 // 1. It transforms the input, here from string -> string
@@ -7,14 +12,14 @@ import { validate } from "uuid";
 
 @Injectable()
 export class UuidValidationPipe implements PipeTransform<string, string> {
-    transform(value: string, metadata: ArgumentMetadata): string {
-        if(!value) {
-            throw new BadRequestException("ID parameter is required");
-        }
-
-        if(!validate(value)) {
-            throw new BadRequestException("Invalid UUID format");
-        }
-        return value;
+  transform(value: string, metadata: ArgumentMetadata): string {
+    if (!value) {
+      throw new BadRequestException('ID parameter is required');
     }
+
+    if (!validate(value)) {
+      throw new BadRequestException('Invalid UUID format');
+    }
+    return value;
+  }
 }

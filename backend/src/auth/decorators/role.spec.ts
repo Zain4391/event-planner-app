@@ -33,13 +33,17 @@ describe('Roles Decorator', () => {
     it('should work with ORGANIZER role', () => {
       Roles(UserRole.ORGANIZER);
 
-      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [UserRole.ORGANIZER]);
+      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [
+        UserRole.ORGANIZER,
+      ]);
     });
 
     it('should work with CUSTOMER role', () => {
       Roles(UserRole.CUSTOMER);
 
-      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [UserRole.CUSTOMER]);
+      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [
+        UserRole.CUSTOMER,
+      ]);
     });
   });
 
@@ -47,7 +51,10 @@ describe('Roles Decorator', () => {
     it('should call SetMetadata with array of roles', () => {
       Roles(UserRole.ADMIN, UserRole.ORGANIZER);
 
-      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [UserRole.ADMIN, UserRole.ORGANIZER]);
+      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [
+        UserRole.ADMIN,
+        UserRole.ORGANIZER,
+      ]);
     });
 
     it('should work with all three roles', () => {
@@ -63,7 +70,10 @@ describe('Roles Decorator', () => {
     it('should work with duplicate roles', () => {
       Roles(UserRole.ADMIN, UserRole.ADMIN);
 
-      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [UserRole.ADMIN, UserRole.ADMIN]);
+      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [
+        UserRole.ADMIN,
+        UserRole.ADMIN,
+      ]);
     });
   });
 
@@ -97,7 +107,11 @@ describe('Roles Decorator', () => {
       const allRoles = [UserRole.ADMIN, UserRole.ORGANIZER, UserRole.CUSTOMER];
       Roles(...allRoles);
 
-      expect(mockSetMetadata).toHaveBeenCalledWith('roles', ['Admin', 'Organizer', 'Customer']);
+      expect(mockSetMetadata).toHaveBeenCalledWith('roles', [
+        'Admin',
+        'Organizer',
+        'Customer',
+      ]);
     });
   });
 });

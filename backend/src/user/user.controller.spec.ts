@@ -86,7 +86,9 @@ describe('UserController', () => {
       const error = new Error('Database error');
       mockUserService.findAll.mockRejectedValueOnce(error);
 
-      await expect(controller.findAll(mockPaginationDto)).rejects.toThrow(error);
+      await expect(controller.findAll(mockPaginationDto)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -154,7 +156,9 @@ describe('UserController', () => {
       const error = new Error('Update failed');
       mockUserService.update.mockRejectedValueOnce(error);
 
-      await expect(controller.update(userId, updateUserDto)).rejects.toThrow(error);
+      await expect(controller.update(userId, updateUserDto)).rejects.toThrow(
+        error,
+      );
     });
   });
 

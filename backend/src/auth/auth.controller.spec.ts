@@ -78,7 +78,7 @@ describe('AuthController', () => {
       mockAuthService.register.mockResolvedValueOnce(errorResponse);
 
       await expect(controller.register(mockRegisterDto)).rejects.toThrow(
-        new HttpException('Email already in use', 400)
+        new HttpException('Email already in use', 400),
       );
     });
 
@@ -90,7 +90,7 @@ describe('AuthController', () => {
       mockAuthService.register.mockResolvedValueOnce(errorResponse);
 
       await expect(controller.register(mockRegisterDto)).rejects.toThrow(
-        new HttpException('Internal server error', 500)
+        new HttpException('Internal server error', 500),
       );
     });
   });
@@ -131,7 +131,7 @@ describe('AuthController', () => {
       mockAuthService.login.mockResolvedValueOnce(errorResponse);
 
       await expect(controller.login(mockLoginDto)).rejects.toThrow(
-        new HttpException('Invalid credentials', 401)
+        new HttpException('Invalid credentials', 401),
       );
     });
 
@@ -143,7 +143,7 @@ describe('AuthController', () => {
       mockAuthService.login.mockResolvedValueOnce(errorResponse);
 
       await expect(controller.login(mockLoginDto)).rejects.toThrow(
-        new HttpException('Internal server error', 500)
+        new HttpException('Internal server error', 500),
       );
     });
   });
@@ -166,7 +166,7 @@ describe('AuthController', () => {
       expect(result).toEqual(successResponse);
       expect(authService.resetPassword).toHaveBeenCalledWith(
         resetPasswordBody.email,
-        resetPasswordBody.password
+        resetPasswordBody.password,
       );
     });
 
@@ -189,7 +189,7 @@ describe('AuthController', () => {
       mockAuthService.resetPassword.mockResolvedValueOnce(errorResponse);
 
       await expect(controller.resetPassword(resetPasswordBody)).rejects.toThrow(
-        new HttpException('User not found', 404)
+        new HttpException('User not found', 404),
       );
     });
   });

@@ -251,9 +251,7 @@ describe('Event Planner App (e2e)', () => {
       });
 
       it('should reject profile access without token', async () => {
-        await request(app.getHttpServer())
-          .get('/auth/profile')
-          .expect(401);
+        await request(app.getHttpServer()).get('/auth/profile').expect(401);
       });
 
       it('should reject profile access with invalid token', async () => {
@@ -281,7 +279,9 @@ describe('Event Planner App (e2e)', () => {
           .set('Authorization', `Bearer ${organizerToken}`)
           .expect(200);
 
-        expect(response.body.message).toBe('Access Granted to Admin & Organizer');
+        expect(response.body.message).toBe(
+          'Access Granted to Admin & Organizer',
+        );
       });
 
       it('should allow customer access to customer endpoint', async () => {
@@ -410,7 +410,9 @@ describe('Event Planner App (e2e)', () => {
         .expect(200);
 
       expect(response.body.statusCode).toBe(200);
-      expect(response.body.message).toBe('Published events fetched successfully');
+      expect(response.body.message).toBe(
+        'Published events fetched successfully',
+      );
       expect(Array.isArray(response.body.data)).toBe(true);
     });
 
@@ -469,7 +471,9 @@ describe('Event Planner App (e2e)', () => {
         .expect(200);
 
       expect(response.body.statusCode).toBe(200);
-      expect(response.body.message).toBe("Organizer's events fetched successfully");
+      expect(response.body.message).toBe(
+        "Organizer's events fetched successfully",
+      );
       expect(Array.isArray(response.body.data)).toBe(true);
     });
 
@@ -603,7 +607,7 @@ describe('Event Planner App (e2e)', () => {
 
     it('should handle non-existent resource', async () => {
       const nonExistentId = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       await request(app.getHttpServer())
         .get(`/users/${nonExistentId}`)
         .set('Authorization', `Bearer ${adminToken}`)

@@ -84,7 +84,10 @@ describe('CurrentUser Decorator', () => {
 
     it('should call switchToHttp and getRequest', () => {
       const switchToHttpSpy = jest.spyOn(mockExecutionContext, 'switchToHttp');
-      const getRequestSpy = jest.spyOn(mockExecutionContext.switchToHttp(), 'getRequest');
+      const getRequestSpy = jest.spyOn(
+        mockExecutionContext.switchToHttp(),
+        'getRequest',
+      );
 
       CurrentUser(null, mockExecutionContext);
 

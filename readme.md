@@ -2,7 +2,7 @@
 
 ## 📋 Project Overview
 
-A comprehensive event management application built with modern web technologies, featuring multi-role user management, event creation, ticket booking, and payment processing. The application provides a complete full-stack solution with a robust backend API and a modern, responsive frontend interface.
+A comprehensive event management application built with modern web technologies, featuring multi-role user management, event creation, and event discovery. The application provides a complete full-stack solution with a robust NestJS backend API and a modern Next.js frontend interface. Currently implements core event management features with plans for advanced ticketing and booking systems.
 
 ## 🛠️ Tech Stack
 
@@ -18,20 +18,22 @@ A comprehensive event management application built with modern web technologies,
 
 ### Frontend
 - **Framework**: Next.js 15 with TypeScript and App Router
-- **UI Library**: ShadCN UI components with TailwindCSS
+- **UI Library**: ShadCN UI components with TailwindCSS v4
 - **State Management**: React Context API with custom hooks
 - **Authentication**: JWT integration with protected routes
 - **Forms**: React Hook Form with Zod validation
-- **Styling**: TailwindCSS with responsive design
+- **Styling**: TailwindCSS v4 with responsive design
+- **HTTP Client**: Axios for API communication
 
 ## 🗄️ Database Architecture
 
 ### Core Entities
 - **Users**: Multi-role system (Admin, Organizer, Customer) with authentication
-- **Events**: Complete event lifecycle management with categories
-- **Ticket Tiers**: Flexible pricing and capacity management system
-- **Orders & Payments**: Full e-commerce booking flow
-- **Tickets**: QR code generation for entry validation
+- **Events**: Complete event lifecycle management with categories and venue details
+- **Categories**: Event categorization system for better organization
+- **Ticket Tiers**: Flexible pricing and capacity management system (schema ready)
+- **Orders & Payments**: E-commerce booking flow (schema ready)
+- **Tickets**: QR code generation for entry validation (schema ready)
 
 ### Database Schema Highlights
 - Full referential integrity with foreign key constraints
@@ -124,6 +126,8 @@ A comprehensive event management application built with modern web technologies,
    - Homepage with hero section and features ✅ COMPLETED
    - Login and registration pages ✅ COMPLETED
    - Dashboard with role-based content ✅ COMPLETED
+   - Events listing page with search and filtering ✅ COMPLETED
+   - Event detail pages with comprehensive information ✅ COMPLETED
    - Protected route implementation ✅ COMPLETED
    - Responsive navigation and layout ✅ COMPLETED
 
@@ -216,6 +220,10 @@ event-planner-app/
 │   │   │   └── page.tsx             # ✅ Registration page
 │   │   ├── dashboard/               # ✅ Dashboard pages
 │   │   │   └── page.tsx             # ✅ Protected dashboard
+│   │   ├── events/                  # ✅ Event pages - COMPLETE
+│   │   │   ├── page.tsx             # ✅ Events listing with search/filter
+│   │   │   └── [id]/                # ✅ Dynamic event detail pages
+│   │   │       └── page.tsx         # ✅ Event detail page
 │   │   ├── layout.tsx               # ✅ Root layout with providers
 │   │   └── globals.css              # ✅ Global styles
 │   ├── components/                  # ✅ React Components - COMPLETE
@@ -224,6 +232,8 @@ event-planner-app/
 │   │   ├── form/                    # Form components
 │   │   │   ├── login-form.tsx       # ✅ Login form with validation
 │   │   │   └── register-form.tsx    # ✅ Registration form with validation
+│   │   ├── events/                  # Event components
+│   │   │   └── event-card.tsx       # ✅ Event card component
 │   │   ├── layout/                  # Layout components
 │   │   │   ├── header.tsx           # ✅ Navigation header
 │   │   │   └── footer.tsx           # ✅ Site footer
@@ -314,15 +324,21 @@ PORT=3000
 - [x] ✅ Modern UI with ShadCN components
 - [x] ✅ Protected routes and role-based navigation
 
-### 🚧 Phase 5: Advanced Event Features (Next)
-- [ ] Event discovery and listing pages
-- [ ] Detailed event pages with booking flow
-- [ ] Image upload and storage handling
-- [ ] Advanced event search and filtering
-- [ ] Venue and location management
-- [ ] Event analytics and reporting
+### ✅ Phase 5: Event Discovery & Details - COMPLETED 🎉
+- [x] ✅ Event discovery and listing pages with search and filtering
+- [x] ✅ Detailed event pages with comprehensive information display
+- [x] ✅ Event image handling with fallback UI
+- [x] ✅ Advanced event search and filtering by category and status
+- [x] ✅ Venue and location information display
+- [x] ✅ Event capacity tracking and visual indicators
 
-### 🎫 Phase 6: Ticketing & Booking System (Future)
+### 🚧 Phase 6: Advanced Event Features (Next)
+- [ ] Image upload and storage handling
+- [ ] Event analytics and reporting
+- [ ] Event management dashboard for organizers
+- [ ] Event editing and management interface
+
+### 🎫 Phase 7: Ticketing & Booking System (Future)
 - [ ] Ticket tier creation and management
 - [ ] Real-time inventory tracking
 - [ ] Shopping cart functionality
@@ -331,7 +347,7 @@ PORT=3000
 - [ ] Booking confirmation system
 - [ ] Ticket generation with QR codes
 
-### 🚀 Phase 7: Advanced Features (Future)
+### 🚀 Phase 8: Advanced Features (Future)
 - [ ] QR code scanning for event entry
 - [ ] Email notification system
 - [ ] Analytics dashboard and reporting
@@ -445,11 +461,49 @@ The application will be available at:
 - Frontend: http://localhost:3001
 - Backend API: http://localhost:3000
 
+### Development Notes
+- **Backend**: Runs on port 3000 with CORS enabled for frontend
+- **Frontend**: Runs on port 3001 with Next.js development server
+- **Database**: Supabase PostgreSQL with Drizzle ORM
+- **Authentication**: JWT tokens stored in localStorage
+- **Code Quality**: ESLint and Prettier configured (needs formatting fixes)
+
 ### Database Setup
 1. Create Supabase project and obtain credentials
 2. Run the provided SQL schema in Supabase SQL editor
 3. Enable Row Level Security on all tables
 4. Configure environment variables with connection details
+
+## 🔌 API Endpoints Reference
+
+### Currently Implemented Endpoints
+
+#### Authentication Endpoints
+- `POST /auth/register` - User registration
+- `POST /auth/login` - User login
+- `POST /auth/reset-password` - Password reset
+
+#### User Management Endpoints (Admin Only)
+- `GET /users` - Get all users (with pagination)
+- `GET /users/:id` - Get user by ID
+- `PATCH /users/:id` - Update user
+- `DELETE /users/:id` - Delete user
+
+#### Event Management Endpoints
+- `GET /events` - Get all published events (public)
+- `GET /events/admin/all` - Get all events (admin only)
+- `GET /events/my-events` - Get organizer's events
+- `GET /events/:id` - Get event by ID (protected)
+- `POST /events/create-event` - Create event (organizer only)
+- `PATCH /events/:id/update-event` - Update event (organizer only)
+- `PATCH /events/:id/publish-event` - Publish event (organizer only)
+- `DELETE /events/:id/remove-event` - Delete event (admin/organizer)
+
+#### Category Management Endpoints (Admin Only)
+- `GET /categories` - Get all categories
+- `POST /categories` - Create category
+- `PATCH /categories/:id` - Update category
+- `DELETE /categories/:id` - Delete category
 
 ### API Testing
 The following endpoints are available for testing:
@@ -608,11 +662,40 @@ Authorization: Bearer <ADMIN_JWT_TOKEN>
 - **User Management**: Complete CRUD operations with role-based permissions
 - **Event Management**: Full event lifecycle with organizer and admin controls
 - **Category System**: Admin-managed event categorization
+- **Event Discovery**: Complete event listing and detail pages with search/filtering
 - **Frontend Application**: Modern Next.js app with responsive design
 - **Security**: Password hashing, input validation, CORS, RBAC, JWT tokens
 - **Type Safety**: Full TypeScript integration across frontend and backend
 - **Database Integration**: Working Drizzle ORM with Supabase PostgreSQL
 - **UI/UX**: Modern, accessible interface with ShadCN components
+- **Event Display**: Rich event detail pages with venue, capacity, and status information
+
+## 🚨 Current Development Status
+
+### ✅ Fully Functional Features
+- **Authentication System**: Complete login/register with JWT tokens
+- **User Management**: Full CRUD with role-based access control
+- **Event Management**: Create, read, update, delete events with validation
+- **Category Management**: Admin-controlled event categorization
+- **Event Discovery**: Browse events with search and filtering
+- **Event Details**: Rich event pages with venue, capacity, and status info
+- **Responsive UI**: Modern interface that works on all devices
+
+### ⚠️ Known Issues
+- **Code Formatting**: 154 ESLint/Prettier formatting errors in backend (easily fixable)
+- **ESLint Configuration**: Config file naming issue (eslint.config.mjs vs eslint.config.js)
+- **Missing Features**: Ticketing, booking, and payment systems not yet implemented
+
+### 🔧 Quick Fixes Needed
+```bash
+# Fix formatting issues
+cd backend
+npm run format
+npm run lint
+
+# Or rename config file
+mv eslint.config.mjs eslint.config.js
+```
 
 ## 👥 Team & Methodology
 

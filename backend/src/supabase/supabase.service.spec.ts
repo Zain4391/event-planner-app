@@ -65,7 +65,9 @@ describe('SupabaseService', () => {
   describe('constructor', () => {
     it('should initialize Supabase client with correct configuration', () => {
       expect(configService.getOrThrow).toHaveBeenCalledWith('SUPABASE_URL');
-      expect(configService.getOrThrow).toHaveBeenCalledWith('SUPABASE_SERVICE_KEY');
+      expect(configService.getOrThrow).toHaveBeenCalledWith(
+        'SUPABASE_SERVICE_KEY',
+      );
     });
   });
 

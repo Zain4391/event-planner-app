@@ -60,7 +60,10 @@ describe('RoleGuard', () => {
       const result = guard.canActivate(mockExecutionContext);
 
       expect(result).toBe(true);
-      expect(reflector.get).toHaveBeenCalledWith('roles', mockExecutionContext.getHandler());
+      expect(reflector.get).toHaveBeenCalledWith(
+        'roles',
+        mockExecutionContext.getHandler(),
+      );
     });
 
     it('should return true when required roles array is empty', () => {

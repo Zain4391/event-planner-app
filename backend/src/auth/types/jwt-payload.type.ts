@@ -1,6 +1,6 @@
 export type jwtPayload = {
-    id: string;
-    email: string;
-    isActive: boolean;
-    role:string;
-}
+  id: string;
+  email: string;
+  isActive: boolean;
+  role: string;
+};

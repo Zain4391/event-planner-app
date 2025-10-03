@@ -1,6 +1,6 @@
-import { SetMetadata } from "@nestjs/common";
-import { UserRole } from "../dto/register.dto";
+import { SetMetadata } from '@nestjs/common';
+import { UserRole } from '../dto/register.dto';
 
 export function Roles(...roles: UserRole[]) {
-    return SetMetadata('roles', roles);
+  return SetMetadata('roles', roles);
 }

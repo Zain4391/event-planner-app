@@ -4,22 +4,20 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class SupabaseService {
-    private _supabase: SupabaseClient;
+  private _supabase: SupabaseClient;
 
-    constructor(
-        private readonly configService: ConfigService
-    ) {
-        this._supabase = createClient(
-            this.configService.getOrThrow<string>("SUPABASE_URL"),
-            this.configService.getOrThrow<string>("SUPABASE_SERVICE_KEY")
-        )
-    }
+  constructor(private readonly configService: ConfigService) {
+    this._supabase = createClient(
+      this.configService.getOrThrow<string>('SUPABASE_URL'),
+      this.configService.getOrThrow<string>('SUPABASE_SERVICE_KEY'),
+    );
+  }
 
-    get client() {
-        return this._supabase;
-    }
+  get client() {
+    return this._supabase;
+  }
 
-    get storage() {
-        return this._supabase.storage;
-    }
+  get storage() {
+    return this._supabase.storage;
+  }
 }
