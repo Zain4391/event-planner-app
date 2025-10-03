@@ -1,6 +1,20 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { LoginCredentials, RegisterData, User, Event, Category } from '../types/api';
 
+// Create event data type that matches backend CreateEventDto
+export interface CreateEventData {
+  title: string;
+  description?: string;
+  categoryId: string;
+  venueName: string;
+  venueAddress: string;
+  eventDate: string; // YYYY-MM-DD format as expected by backend
+  startTime: string; // HH:MM:SS format
+  endTime: string;   // HH:MM:SS format
+  totalCapacity: number;
+  bannerImageUrl?: string;
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 // Create axios instance
@@ -68,7 +82,7 @@ export const apiClient = {
     getById: (id: string) => apiInstance.get(`/events/${id}`),
     getAdminAll: () => apiInstance.get('/events/admin/all'),
     getMyEvents: () => apiInstance.get('/events/my-events'),
-    create: (data: Omit<Event, 'id' | 'createdAt' | 'updatedAt' | 'organizerId'>) => apiInstance.post('/events/create-event', data),
+    create: (data: CreateEventData) => apiInstance.post('/events/create-event', data),
     update: (id: string, data: Partial<Event>) => apiInstance.patch(`/events/${id}/update-event`, data),
     publish: (id: string) => apiInstance.patch(`/events/${id}/publish-event`),
     delete: (id: string) => apiInstance.delete(`/events/${id}/remove-event`),

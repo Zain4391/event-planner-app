@@ -24,6 +24,10 @@ export function Header() {
       ? [{ name: 'Dashboard', href: '/dashboard', icon: Settings }] 
       : []
     ),
+    ...(user?.role === 'Organizer' 
+      ? [{ name: 'My Events', href: '/organizer', icon: Calendar }] 
+      : []
+    ),
     ...(user?.role === 'Admin' 
       ? [{ name: 'Users', href: '/users', icon: Users }] 
       : []

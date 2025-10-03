@@ -37,10 +37,6 @@ export class UpdateEventDto {
 
   @IsOptional()
   @IsDateString()
-  @Transform(({ value }) => new Date(value))
-  @MinDate(new Date(), {
-    message: 'Event date must be in the future.',
-  })
   eventDate?: string; // "2024-12-25"
 
   @IsOptional()
